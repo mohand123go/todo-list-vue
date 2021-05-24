@@ -19,7 +19,13 @@ const app = new Vue({
 
   watch: {
     todoItems: function () {
-      this.viewedTodoItems = this.todoItems;
+      console.log("gukkkkkk");
+      this.changeTaskState();
+    },
+
+    selectedTasksSate: function () {
+      console.log("byeeeeeeee");
+      this.changeTaskState();
     },
   },
 
@@ -47,8 +53,11 @@ const app = new Vue({
       this.todoItems.splice(idx, 1, todoitem);
     },
     handlechangeTask(changeState) {
-      this.selectedTasksSate = changeState;
       console.log("changeState", changeState);
+      this.selectedTasksSate = changeState;
+    },
+
+    changeTaskState() {
       switch (this.selectedTasksSate) {
         case "completed":
           return (this.viewedTodoItems = this.todoItems.filter(
