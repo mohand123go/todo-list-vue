@@ -33,6 +33,7 @@
 
       .todo-app {
         padding: 30px 0;
+        min-width: 320px;
         background-color: white;
         position: relative;
         border-radius: 10px;
@@ -114,7 +115,7 @@
         display: flex;
         width: 100%;
         align-items: center;
-        padding: 0 30px;
+        padding: 0 20px;
         position: relative;
       }
       i:hover {
@@ -187,7 +188,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>
       Vue.filter("textLimit", function (value) {
-        if (value.length > 20) return `${value.slice(0, 18)} ...`;
+        if (value.length > 22) return `${value.slice(0, 22)} ...`;
         return value;
       });
       Vue.component("todo-item", {
@@ -205,6 +206,7 @@
             this.$emit("ondeletitem", this.todoprop);
           },
           EditItem() {
+            if (this.editText === "") return;
             this.todoprop.todoText = this.editText;
             console.log(this.editText);
             this.$emit("onedititem", this.todoprop);
@@ -267,17 +269,18 @@
         </div/>
         `,
       });
+
       const app = new Vue({
         el: "#app",
 
         data() {
           return {
-            title: "welcome To todo-list",
+            title: ` todo-list App 🚀`,
             todoItems: [
-              { todoText: "welcome mohand mostafa" },
-              { todoText: "welcome mohamed nagy" },
-              { todoText: "welcome eman mamdouh" },
-              { todoText: "mohand mostafa abdalbary " },
+              { todoText: "TODO features list 🍉" },
+              { todoText: "Add new Task ✅" },
+              { todoText: "Edit exsited task 🦄" },
+              { todoText: "Delet exsited task 🗑️" },
             ],
           };
         },
