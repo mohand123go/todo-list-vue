@@ -90,6 +90,26 @@
         cursor: pointer;
       }
 
+      .new-task__add {
+        position: absolute;
+        right: -30%;
+        top: 50%;
+        color: white;
+        transform: translate(-100%, -50%);
+        background-color: purple;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+      .new-task__add:hover {
+        background-color: lightblue;
+        color: black;
+      }
+
       .todo-item {
         display: flex;
         width: 100%;
@@ -143,6 +163,9 @@
       .editInput:focus {
         outline: none;
       }
+      .icon {
+        padding-left: 20px;
+      }
     </style>
   </head>
 
@@ -155,6 +178,7 @@
           @onedititem="handleItemEdit"
           v-for="todo in todoItems"
           :todoprop="todo"
+          :key="todo.todoText"
         >
         </todo-item>
         <new-task @oninserttask="handleNewTask"> </new-task>
@@ -173,6 +197,7 @@
             todoText: this.todoprop.todoText,
             hover: false,
             editMood: false,
+            editText: this.todoprop.todoText,
           };
         },
         methods: {
@@ -180,16 +205,19 @@
             this.$emit("ondeletitem", this.todoprop);
           },
           EditItem() {
+            this.todoprop.todoText = this.editText;
+            console.log(this.editText);
             this.$emit("onedititem", this.todoprop);
+            this.editMood = false;
           },
         },
 
         template: `<div
         :class="{ active: hover }"
-        @mouseover="hover=true" 
+        @mouseover="hover=true"
         @mouseleave="hover=false"
         class='todo-item'>
-        <template v-if='!editMood'> 
+        <template v-if='!editMood'>
               <span class='bullet'></span>
                 <p class='text-content'>{{todoText | textLimit}}</p>
                 <div class='todo-item__icons'>
@@ -198,10 +226,11 @@
                 </div>
         </template>
         <template v-if="editMood">
-            <input class="editInput" type='text' placeholder="Edit the todo item" />
+            <input v-model="editText" class="editInput" type='text' placeholder="Edit the todo item" />
+            <i @click="EditItem"  class="icon fas fa-plus-circle"></i>
         </template>
-        
-      
+
+
         </div>`,
       });
 
@@ -218,9 +247,11 @@
           },
           insertNewTask() {
             console.log(this.inputText);
+            if (this.inputText === "") return;
             const newTodoList = { todoText: this.inputText };
 
             this.$emit("oninserttask", newTodoList);
+            this.inputText = "";
           },
         },
         template: `
@@ -229,6 +260,9 @@
             <div v-show="newTaskState"  class='new-task__field-wraper'>
                 <input v-model='inputText'  @keyup.enter="insertNewTask" type='text' class="new-task__textField" placeholder="enter your new task"   />
                 <span  class='new-task__cancel' @click='changeNewTaskState'>x</span>
+
+
+                <i class="new-task__add fas fa-paper-plane" @click='insertNewTask'></i>
             </div>
         </div/>
         `,
@@ -257,8 +291,11 @@
             this.todoItems.push(newTask);
           },
           handleItemEdit(todoitem) {
+            console.log("good");
+            console.log("good");
+
             const idx = this.todoItems.indexOf(todoitem);
-            this.todoItems[idx] = todoitem;
+            this.todoItems.splice(idx, 1, todoitem);
           },
         },
       });
