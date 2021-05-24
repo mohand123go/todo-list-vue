@@ -13,7 +13,11 @@ Vue.component("new-task", {
     insertNewTask() {
       console.log(this.inputText);
       if (this.inputText === "") return;
-      const newTodoList = { todoText: this.inputText };
+      const newTodoList = {
+        id: Math.random() * 100000,
+        todoText: this.inputText,
+        finshedTaskState: false,
+      };
 
       this.$emit("oninserttask", newTodoList);
       this.inputText = "";

@@ -12,6 +12,8 @@ Vue.component("todo-item", {
   methods: {
     handleTaskState() {
       this.finshedTaskState = !this.finshedTaskState;
+      this.todoprop.finshedTaskState = this.finshedTaskState;
+
       this.$emit("ontaskstate", this.todoprop);
     },
     DeletItem() {
@@ -33,7 +35,7 @@ Vue.component("todo-item", {
     class='todo-item'>
     <template v-if='!editMood'>
           <span class='bullet'></span>
-            <p v-bind:class="{'finshed-task':finshedTaskState}" @dblclick='finshedTaskState=!finshedTaskState' class='text-content'>{{todoText | textLimit}}</p>
+            <p v-bind:class="{'finshed-task':finshedTaskState}" @dblclick='handleTaskState' class='text-content'>{{todoText | textLimit}}</p>
             <div class='todo-item__icons'>
                 <i @click="DeletItem"  class="far fa-trash-alt"></i>
                 <i @click="editMood=!editMood" class="far fa-edit"></i>

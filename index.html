@@ -18,13 +18,18 @@
     <div id="app">
       <main class="todo-app" v-if="!loading">
         <h1>{{title}}</h1>
+        <controlls-bar
+          :selectedtasksprops="selectedTasksSate"
+          mohand="selectedtaskstate"
+          @onchangetask="handlechangeTask"
+        ></controlls-bar>
         <todo-item
           @ondeletitem="handleItemDelet"
           @onedititem="handleItemEdit"
           @ontaskstate="handleTaskState"
-          v-for="todo in todoItems"
+          v-for="todo in viewedTodoItems"
           :todoprop="todo"
-          :key="todo.todoText"
+          :key="todo.id"
           :finshedTaskState="todo.finshedTaskState"
         >
         </todo-item>
@@ -37,6 +42,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 
     <script src="globelFilters.js"></script>
+    <script src="controllsBar.js"></script>
     <script src="newTask.js"></script>
     <script src="todoItem.js"></script>
     <script src="app.js"></script>

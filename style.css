@@ -174,3 +174,24 @@ i:first-child {
   text-decoration: line-through;
   text-decoration-color: orange;
 }
+
+.controll-bar {
+  background-color: rgb(240, 247, 250);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.controll-bar button {
+  color: white;
+  border: none;
+  background-color: #d2b8f1;
+  padding: 5px 15px;
+  border-radius: 40px;
+  cursor: pointer;
+}
+
+.btn-controll-active {
+  transition: all 0.2s ease-in-out;
+  background-color: #af7eeb !important;
+}
