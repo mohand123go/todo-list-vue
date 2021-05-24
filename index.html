@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serifs;
+      }
+      h1 {
+        padding: 20px;
+      }
+
+      #app {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        background-color: #e3e9ff;
+      }
+
+      .todo-app {
+        padding: 30px 0;
+        background-color: white;
+        position: relative;
+        border-radius: 10px;
+      }
+
+      .new-task {
+        max-width: 220px;
+        margin: 0 auto;
+        position: relative;
+        bottom: 0;
+        text-align: center;
+        transform: translate(0, 100%);
+      }
+
+      .new-task__btn {
+        padding: 10px 20px;
+        border-radius: 60px;
+        background-color: #af7eeb;
+        color: white;
+        font-weight: bolder;
+        border: none;
+
+        cursor: pointer;
+      }
+
+      .new-task__textField {
+        padding: 10px 20px;
+        padding-right: 50px;
+        border-radius: 60px;
+        border: 1px solid gray;
+        font-weight: bolder;
+        width: 100%;
+      }
+
+      .new-task__textField:focus {
+        outline: none;
+      }
+
+      .new-task__field-wraper {
+        position: relative;
+      }
+
+      .new-task__cancel {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        color: white;
+        transform: translate(-100%, -50%);
+        background-color: purple;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+
+      .todo-item {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        padding: 0 30px;
+        position: relative;
+      }
+      i {
+        position: absolute;
+        right: 0;
+        transform: translate(-150%, 0);
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+        color: white;
+      }
+
+      .active {
+        background-color: #af7eeb;
+        color: white;
+        transition: all 0.3s ease-in-out;
+        font-weight: bold;
+      }
+      .bullet {
+        background-color: #af7eeb;
+        width: 12px;
+        height: 12px;
+        display: block;
+        border-radius: 50%;
+      }
+      .text-content {
+        margin: 0;
+        padding: 20px 0;
+        padding-left: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <main class="todo-app">
+        <h1>{{title}}</h1>
+        <todo-item
+          @ondeletitem="handleItemDelet"
+          v-for="todo in todoItems"
+          :todoprop="todo"
+        >
+        </todo-item>
+        <new-task @oninserttask="handleNewTask"> </new-task>
+      </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script>
+      Vue.filter("textLimit", function (value) {
+        if (value.length > 20) return `${value.slice(0, 18)} ...`;
+        return value;
+      });
+      Vue.component("todo-item", {
+        props: ["todoprop"],
+        data() {
+          return {
+            todoText: this.todoprop.todoText,
+            hover: false,
+          };
+        },
+        methods: {
+          DeletItem() {
+            this.$emit("ondeletitem", this.todoprop);
+          },
+        },
+
+        template: `<div
+        :class="{ active: hover }"
+        @mouseover="hover=true" 
+        @mouseleave="hover=false"
+        class='todo-item'>
+        <span class='bullet'></span>
+        <p class='text-content'>{{todoText | textLimit}}</p>
+        <i @click="DeletItem" v-show="hover" class="far fa-trash-alt"></i>
+        </div>`,
+      });
+
+      Vue.component("new-task", {
+        data() {
+          return {
+            inputText: "",
+            newTaskState: false,
+          };
+        },
+        methods: {
+          changeNewTaskState() {
+            this.newTaskState = !this.newTaskState;
+          },
+          insertNewTask() {
+            console.log(this.inputText);
+            const newTodoList = { todoText: this.inputText };
+
+            this.$emit("oninserttask", newTodoList);
+          },
+        },
+        template: `
+        <div class='new-task'>
+            <button v-show="!newTaskState" @click='changeNewTaskState' class="new-task__btn">+ New Task</button>
+            <div v-show="newTaskState"  class='new-task__field-wraper'>
+                <input v-model='inputText'  @keyup.enter="insertNewTask" type='text' class="new-task__textField" placeholder="enter your new task"   />
+                <span  class='new-task__cancel' @click='changeNewTaskState'>x</span>
+            </div>
+        </div/>
+        `,
+      });
+      const app = new Vue({
+        el: "#app",
+
+        data() {
+          return {
+            title: "welcome To todo-list",
+            todoItems: [
+              { todoText: "welcome mohand mostafa" },
+              { todoText: "welcome mohamed nagy" },
+              { todoText: "welcome eman mamdouh" },
+              { todoText: "mohand mostafa abdalbary " },
+            ],
+          };
+        },
+
+        methods: {
+          handleItemDelet(todoitem) {
+            const idx = this.todoItems.indexOf(todoitem);
+            this.todoItems.splice(idx, 1);
+          },
+          handleNewTask(newTask) {
+            this.todoItems.push(newTask);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
