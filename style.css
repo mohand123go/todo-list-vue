@@ -1,0 +1,176 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, Helvetica, sans-serifs;
+}
+h1 {
+  padding: 20px;
+}
+
+#app {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background-color: #e3e9ff;
+}
+
+.todo-app {
+  padding: 30px 0;
+  min-width: 320px;
+  background-color: white;
+  position: relative;
+  border-radius: 10px;
+}
+
+.new-task {
+  max-width: 220px;
+  margin: 0 auto;
+  position: relative;
+  bottom: 0;
+  text-align: center;
+  transform: translate(0, 100%);
+}
+
+.new-task__btn {
+  padding: 10px 20px;
+  border-radius: 60px;
+  background-color: #af7eeb;
+  color: white;
+  font-weight: bolder;
+  border: none;
+
+  cursor: pointer;
+}
+
+.new-task__textField {
+  padding: 10px 20px;
+  padding-right: 50px;
+  border-radius: 60px;
+  border: 1px solid gray;
+  font-weight: bolder;
+  width: 100%;
+}
+
+.new-task__textField:focus {
+  outline: none;
+}
+
+.new-task__field-wraper {
+  position: relative;
+}
+
+.new-task__cancel {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  color: white;
+  transform: translate(-100%, -50%);
+  background-color: purple;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.new-task__add {
+  position: absolute;
+  right: -30%;
+  top: 50%;
+  color: white;
+  transform: translate(-100%, -50%);
+  background-color: purple;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.new-task__add:hover {
+  background-color: lightblue;
+  color: black;
+}
+
+.todo-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+}
+i:hover {
+  cursor: pointer;
+}
+i:first-child {
+  margin-right: 7px;
+}
+
+.todo-item__icons {
+  position: absolute;
+  right: 0;
+  transform: translate(-60%, 0);
+
+  transition: all 0.5s ease-in-out;
+  color: white;
+}
+
+.active {
+  background-color: #af7eeb;
+  color: white;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+}
+.bullet {
+  background-color: #af7eeb;
+  width: 12px;
+  height: 12px;
+  display: block;
+  border-radius: 50%;
+}
+.text-content {
+  margin: 0;
+  padding: 20px 0;
+  padding-left: 15px;
+}
+
+.editInput {
+  width: 100%;
+  padding: 10px 10px;
+
+  padding-bottom: 7px;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+.editInput:focus {
+  outline: none;
+}
+.icon {
+  padding-left: 20px;
+}
+
+.loadeer-icon {
+  animation-name: loader;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  color: #af7eeb;
+}
+@keyframes loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.finshed-task {
+  text-decoration: line-through;
+  text-decoration-color: orange;
+}

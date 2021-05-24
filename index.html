@@ -11,297 +11,34 @@
       integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
       crossorigin="anonymous"
     />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: Arial, Helvetica, sans-serifs;
-      }
-      h1 {
-        padding: 20px;
-      }
-
-      #app {
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-        background-color: #e3e9ff;
-      }
-
-      .todo-app {
-        padding: 30px 0;
-        min-width: 320px;
-        background-color: white;
-        position: relative;
-        border-radius: 10px;
-      }
-
-      .new-task {
-        max-width: 220px;
-        margin: 0 auto;
-        position: relative;
-        bottom: 0;
-        text-align: center;
-        transform: translate(0, 100%);
-      }
-
-      .new-task__btn {
-        padding: 10px 20px;
-        border-radius: 60px;
-        background-color: #af7eeb;
-        color: white;
-        font-weight: bolder;
-        border: none;
-
-        cursor: pointer;
-      }
-
-      .new-task__textField {
-        padding: 10px 20px;
-        padding-right: 50px;
-        border-radius: 60px;
-        border: 1px solid gray;
-        font-weight: bolder;
-        width: 100%;
-      }
-
-      .new-task__textField:focus {
-        outline: none;
-      }
-
-      .new-task__field-wraper {
-        position: relative;
-      }
-
-      .new-task__cancel {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        color: white;
-        transform: translate(-100%, -50%);
-        background-color: purple;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-      }
-
-      .new-task__add {
-        position: absolute;
-        right: -30%;
-        top: 50%;
-        color: white;
-        transform: translate(-100%, -50%);
-        background-color: purple;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-      }
-      .new-task__add:hover {
-        background-color: lightblue;
-        color: black;
-      }
-
-      .todo-item {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        padding: 0 20px;
-        position: relative;
-      }
-      i:hover {
-        cursor: pointer;
-      }
-      i:first-child {
-        margin-right: 7px;
-      }
-
-      .todo-item__icons {
-        position: absolute;
-        right: 0;
-        transform: translate(-60%, 0);
-
-        transition: all 0.5s ease-in-out;
-        color: white;
-      }
-
-      .active {
-        background-color: #af7eeb;
-        color: white;
-        transition: all 0.3s ease-in-out;
-        font-weight: bold;
-      }
-      .bullet {
-        background-color: #af7eeb;
-        width: 12px;
-        height: 12px;
-        display: block;
-        border-radius: 50%;
-      }
-      .text-content {
-        margin: 0;
-        padding: 20px 0;
-        padding-left: 15px;
-      }
-
-      .editInput {
-        width: 100%;
-        padding: 10px 10px;
-
-        padding-bottom: 7px;
-        border: none;
-        border-bottom: 1px solid gray;
-      }
-      .editInput:focus {
-        outline: none;
-      }
-      .icon {
-        padding-left: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
     <div id="app">
-      <main class="todo-app">
+      <main class="todo-app" v-if="!loading">
         <h1>{{title}}</h1>
         <todo-item
           @ondeletitem="handleItemDelet"
           @onedititem="handleItemEdit"
+          @ontaskstate="handleTaskState"
           v-for="todo in todoItems"
           :todoprop="todo"
           :key="todo.todoText"
+          :finshedTaskState="todo.finshedTaskState"
         >
         </todo-item>
         <new-task @oninserttask="handleNewTask"> </new-task>
       </main>
+      <div class="loader" v-if="loading">
+        <i class="fas loadeer-icon fa-circle-notch fa-4x"></i>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <script>
-      Vue.filter("textLimit", function (value) {
-        if (value.length > 22) return `${value.slice(0, 22)} ...`;
-        return value;
-      });
-      Vue.component("todo-item", {
-        props: ["todoprop"],
-        data() {
-          return {
-            todoText: this.todoprop.todoText,
-            hover: false,
-            editMood: false,
-            editText: this.todoprop.todoText,
-          };
-        },
-        methods: {
-          DeletItem() {
-            this.$emit("ondeletitem", this.todoprop);
-          },
-          EditItem() {
-            if (this.editText === "") return;
-            this.todoprop.todoText = this.editText;
-            console.log(this.editText);
-            this.$emit("onedititem", this.todoprop);
-            this.editMood = false;
-          },
-        },
 
-        template: `<div
-        :class="{ active: hover }"
-        @mouseover="hover=true"
-        @mouseleave="hover=false"
-        class='todo-item'>
-        <template v-if='!editMood'>
-              <span class='bullet'></span>
-                <p class='text-content'>{{todoText | textLimit}}</p>
-                <div class='todo-item__icons'>
-                    <i @click="DeletItem"  class="far fa-trash-alt"></i>
-                    <i @click="editMood=!editMood" class="far fa-edit"></i>
-                </div>
-        </template>
-        <template v-if="editMood">
-            <input v-model="editText" class="editInput" type='text' placeholder="Edit the todo item" />
-            <i @click="EditItem"  class="icon fas fa-plus-circle"></i>
-        </template>
-
-
-        </div>`,
-      });
-
-      Vue.component("new-task", {
-        data() {
-          return {
-            inputText: "",
-            newTaskState: false,
-          };
-        },
-        methods: {
-          changeNewTaskState() {
-            this.newTaskState = !this.newTaskState;
-          },
-          insertNewTask() {
-            console.log(this.inputText);
-            if (this.inputText === "") return;
-            const newTodoList = { todoText: this.inputText };
-
-            this.$emit("oninserttask", newTodoList);
-            this.inputText = "";
-          },
-        },
-        template: `
-        <div class='new-task'>
-            <button v-show="!newTaskState" @click='changeNewTaskState' class="new-task__btn">+ New Task</button>
-            <div v-show="newTaskState"  class='new-task__field-wraper'>
-                <input v-model='inputText'  @keyup.enter="insertNewTask" type='text' class="new-task__textField" placeholder="enter your new task"   />
-                <span  class='new-task__cancel' @click='changeNewTaskState'>x</span>
-
-
-                <i class="new-task__add fas fa-paper-plane" @click='insertNewTask'></i>
-            </div>
-        </div/>
-        `,
-      });
-
-      const app = new Vue({
-        el: "#app",
-
-        data() {
-          return {
-            title: ` todo-list App 🚀`,
-            todoItems: [
-              { todoText: "TODO features list 🍉" },
-              { todoText: "Add new Task ✅" },
-              { todoText: "Edit exsited task 🦄" },
-              { todoText: "Delet exsited task 🗑️" },
-            ],
-          };
-        },
-
-        methods: {
-          handleItemDelet(todoitem) {
-            const idx = this.todoItems.indexOf(todoitem);
-            this.todoItems.splice(idx, 1);
-          },
-          handleNewTask(newTask) {
-            this.todoItems.push(newTask);
-          },
-          handleItemEdit(todoitem) {
-            console.log("good");
-            console.log("good");
-
-            const idx = this.todoItems.indexOf(todoitem);
-            this.todoItems.splice(idx, 1, todoitem);
-          },
-        },
-      });
-    </script>
+    <script src="globelFilters.js"></script>
+    <script src="newTask.js"></script>
+    <script src="todoItem.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
