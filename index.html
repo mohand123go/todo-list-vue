@@ -97,11 +97,18 @@
         padding: 0 30px;
         position: relative;
       }
-      i {
+      i:hover {
+        cursor: pointer;
+      }
+      i:first-child {
+        margin-right: 7px;
+      }
+
+      .todo-item__icons {
         position: absolute;
         right: 0;
-        transform: translate(-150%, 0);
-        cursor: pointer;
+        transform: translate(-60%, 0);
+
         transition: all 0.5s ease-in-out;
         color: white;
       }
@@ -124,6 +131,18 @@
         padding: 20px 0;
         padding-left: 15px;
       }
+
+      .editInput {
+        width: 100%;
+        padding: 10px 10px;
+
+        padding-bottom: 7px;
+        border: none;
+        border-bottom: 1px solid gray;
+      }
+      .editInput:focus {
+        outline: none;
+      }
     </style>
   </head>
 
@@ -133,6 +152,7 @@
         <h1>{{title}}</h1>
         <todo-item
           @ondeletitem="handleItemDelet"
+          @onedititem="handleItemEdit"
           v-for="todo in todoItems"
           :todoprop="todo"
         >
@@ -152,11 +172,15 @@
           return {
             todoText: this.todoprop.todoText,
             hover: false,
+            editMood: false,
           };
         },
         methods: {
           DeletItem() {
             this.$emit("ondeletitem", this.todoprop);
+          },
+          EditItem() {
+            this.$emit("onedititem", this.todoprop);
           },
         },
 
@@ -165,9 +189,19 @@
         @mouseover="hover=true" 
         @mouseleave="hover=false"
         class='todo-item'>
-        <span class='bullet'></span>
-        <p class='text-content'>{{todoText | textLimit}}</p>
-        <i @click="DeletItem" v-show="hover" class="far fa-trash-alt"></i>
+        <template v-if='!editMood'> 
+              <span class='bullet'></span>
+                <p class='text-content'>{{todoText | textLimit}}</p>
+                <div class='todo-item__icons'>
+                    <i @click="DeletItem"  class="far fa-trash-alt"></i>
+                    <i @click="editMood=!editMood" class="far fa-edit"></i>
+                </div>
+        </template>
+        <template v-if="editMood">
+            <input class="editInput" type='text' placeholder="Edit the todo item" />
+        </template>
+        
+      
         </div>`,
       });
 
@@ -221,6 +255,10 @@
           },
           handleNewTask(newTask) {
             this.todoItems.push(newTask);
+          },
+          handleItemEdit(todoitem) {
+            const idx = this.todoItems.indexOf(todoitem);
+            this.todoItems[idx] = todoitem;
           },
         },
       });
