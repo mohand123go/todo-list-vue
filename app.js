@@ -50,6 +50,7 @@ const app = new Vue({
     },
     handleItemEdit(todoitem) {
       const idx = this.todoItems.indexOf(todoitem);
+
       this.todoItems.splice(idx, 1, todoitem);
     },
     handlechangeTask(changeState) {

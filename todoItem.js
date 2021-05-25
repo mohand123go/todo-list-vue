@@ -2,13 +2,13 @@ Vue.component("todo-item", {
   props: ["todoprop"],
   data() {
     return {
-      todoText: this.todoprop.todoText,
       hover: false,
       editMood: false,
       editText: this.todoprop.todoText,
       finshedTaskState: this.todoprop.finshedTaskState,
     };
   },
+
   methods: {
     handleTaskProps() {
       this.finshedTaskState = !this.finshedTaskState;
@@ -22,7 +22,7 @@ Vue.component("todo-item", {
     EditItem() {
       if (this.editText === "") return;
       this.todoprop.todoText = this.editText;
-      console.log(this.editText);
+
       this.$emit("onedititem", this.todoprop);
       this.editMood = false;
     },
@@ -35,7 +35,7 @@ Vue.component("todo-item", {
     class='todo-item'>
     <template v-if='!editMood'>
           <span class='bullet'></span>
-            <p v-bind:class="{'finshed-task':finshedTaskState}" @dblclick='handleTaskProps' class='text-content'>{{todoText | textLimit}}</p>
+            <p v-bind:class="{'finshed-task':finshedTaskState}" @dblclick='handleTaskProps' class='text-content'>{{this.todoprop.todoText | textLimit}}</p>
             <div class='todo-item__icons'>
                 <i @click="DeletItem"  class="far fa-trash-alt"></i>
                 <i @click="editMood=!editMood" class="far fa-edit"></i>
